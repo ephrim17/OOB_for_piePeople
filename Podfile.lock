@@ -1,0 +1,31 @@
+PODS:
+  - CryptoSwift (1.3.8)
+  - SRCountdownTimer (1.1)
+  - SwiftOTP (2.0.1):
+    - CryptoSwift (>= 1.0.0)
+  - SwiftyRSA (1.6.0):
+    - SwiftyRSA/ObjC (= 1.6.0)
+  - SwiftyRSA/ObjC (1.6.0)
+
+DEPENDENCIES:
+  - CryptoSwift (~> 1.3.8)
+  - SRCountdownTimer
+  - SwiftOTP
+  - SwiftyRSA
+
+SPEC REPOS:
+  trunk:
+    - CryptoSwift
+    - SRCountdownTimer
+    - SwiftOTP
+    - SwiftyRSA
+
+SPEC CHECKSUMS:
+  CryptoSwift: 01b0f0cba1d5c212e5a335ff6c054fb75a204f00
+  SRCountdownTimer: 9c92e444b5403c92f01dd6610299b8c634bc8562
+  SwiftOTP: c246ca39c809c06471ef997c43699a04d562fdac
+  SwiftyRSA: 3b9c9179744217951facc6a3e9ae8d8c97061ffa
+
+PODFILE CHECKSUM: 0ff813adc628dc38542b9fc12dd49eda27e840f6
+
+COCOAPODS: 1.10.1
