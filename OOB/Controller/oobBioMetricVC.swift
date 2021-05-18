@@ -19,6 +19,7 @@ class oobBioMetricVC: UIViewController {
     @IBOutlet weak var transactionTimeLabel : UILabel!
     @IBOutlet weak var transactionIDLabel : UILabel!
     @IBOutlet weak var authenticateBtn: UIButton!
+    @IBOutlet weak var cancelBtn: UIButton!
     
     //MARK: RECEIEVED VALUES FROM AUTH VC
     @objc public var receivedTranID : String?
@@ -37,7 +38,7 @@ class oobBioMetricVC: UIViewController {
     @objc public var receivedSubTitleColor : String?
     @objc public var receivedBoxColor : String?
     @objc public var receivedBGColor : String?
-   
+    
     //MARK: UI CONFIGURATION OUTLETS FROM REACT NATIVE
     @IBOutlet weak var titleLabel: UILabel! //color_&_Text
     @IBOutlet weak var subTitleLabel: UILabel! //color_&_Text
@@ -81,6 +82,21 @@ class oobBioMetricVC: UIViewController {
             }
         }
     }
+    
+    @IBAction func cancelAction(_ sender: Any) {
+        DispatchQueue.main.async {
+            self.sv = UIViewController.displaySpinner(onView: self.view)
+        }
+        let alert = UIAlertController(title: "Do you want to cancel this transaction ?", message: "Are you sure", preferredStyle: UIAlertController.Style.alert)
+        
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.default, handler: {(action:UIAlertAction!) in
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default, handler: {(action:UIAlertAction!) in
+            self.sendOnCancelClicked()
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 extension oobBioMetricVC{
@@ -106,21 +122,45 @@ extension oobBioMetricVC{
         let id = biometricType()
         print("id \(id)")
         //bioMetricAuthenticationMode = id
-//        if id == "face" {
-//            bioImage.image = UIImage(named: "face")
-//        }
-//        else if id == "touch"{
-//            bioImage.image = UIImage(named: "touch")
-//        }
-//        else{
-//            bioImage.image = UIImage(named: "touch")
-//        }
+        //        if id == "face" {
+        //            bioImage.image = UIImage(named: "face")
+        //        }
+        //        else if id == "touch"{
+        //            bioImage.image = UIImage(named: "touch")
+        //        }
+        //        else{
+        //            bioImage.image = UIImage(named: "touch")
+        //        }
         //}
         self.transactionIDLabel.text = self.receivedTranID
         self.amountLabel.text = self.receivedAmount
         self.merchantLabel.text = self.receivedMerchant
         self.transactionTimeLabel.text = self.receivedTranTime
         self.authenticateBtn.layer.cornerRadius = 5
+        self.cancelBtn.layer.cornerRadius = 5
+    }
+    
+    
+    func sendOnCancelClicked(){
+        let oob = OOB_Authentication()
+        oob.sendTranStatus(tranId: self.receivedTranID!, custId: self.receivedCustID!, URL: self.receivedURL!, rc: "01", desc: "User cancelled", authType: self.bioMetricAuthenticationMode, authMode: "1", authFailed: "1") { (rc, desc)  in
+            if rc == "00" {
+                DispatchQueue.main.async {
+                    UIViewController.removeSpinner(spinner: self.sv)
+                    self.presentingViewController?.dismiss(animated: true, completion: {})
+                    self.sendOOBAuthStatusdelegate?.authStatus(result: "\(rc!)", description: "\(desc!)")
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+            else {
+                DispatchQueue.main.async {
+                    UIViewController.removeSpinner(spinner: self.sv)
+                    self.presentingViewController?.dismiss(animated: true, completion: {})
+                    self.sendOOBAuthStatusdelegate?.authStatus(result: "\(rc!)", description: "\(desc!)")
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     //MARK: BIOMETRIC AUTHENTICATION
@@ -143,7 +183,7 @@ extension oobBioMetricVC{
                                                     self.sv = UIViewController.displaySpinner(onView: self.view)
                                                 }
                                                 oob.sendTranStatus(tranId: self.receivedTranID!, custId: self.receivedCustID!, URL: self.receivedURL!, rc: "00", desc: "success", authType: self.bioMetricAuthenticationMode, authMode: "1", authFailed: "0") { (rc, desc)  in
-
+                                                    
                                                     if rc == "00" {
                                                         DispatchQueue.main.async {
                                                             UIViewController.removeSpinner(spinner: self.sv)
@@ -151,7 +191,7 @@ extension oobBioMetricVC{
                                                             myComplete(rc, desc)
                                                         }
                                                     }
-
+                                                    
                                                     else {
                                                         DispatchQueue.main.async {
                                                             UIViewController.removeSpinner(spinner: self.sv)

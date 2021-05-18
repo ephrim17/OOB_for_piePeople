@@ -19,6 +19,7 @@ class oobPinAuthVC: UIViewController {
     @IBOutlet weak var amountLabel : UILabel!
     @IBOutlet weak var transactionTimeLabel : UILabel!
     @IBOutlet weak var transactionIDLabel : UILabel!
+    @IBOutlet weak var cancelBtn : UIButton!
     var sv = UIView()
     
     //MARK: DELEGATES
@@ -93,7 +94,7 @@ extension oobPinAuthVC {
         DispatchQueue.main.async {
             self.sv = UIViewController.displaySpinner(onView: self.view)
         }
-        oobAuth.pinAuthentication(tranId: receivedTranID, custId: receivedCustID, pin: "cancel", URL: receivedURL) { (rc, desc) in
+        oobAuth.pinAuthentication(tranId: receivedTranID, custId: receivedCustID, pin: "user cancel", URL: receivedURL) { (rc, desc) in
             print("pin auth status \(desc!)")
             DispatchQueue.main.async {
                 UIViewController.removeSpinner(spinner: self.sv)
@@ -113,9 +114,8 @@ extension oobPinAuthVC {
         btn2.clipsToBounds = true
         btn3.layer.cornerRadius = 20
         btn3.clipsToBounds = true
+        self.cancelBtn.layer.cornerRadius = 5
     }
-    
-    
     func loadTransactionDetails(){
         self.transactionIDLabel.text = self.receivedTranID
         self.amountLabel.text = self.receivedAmount
